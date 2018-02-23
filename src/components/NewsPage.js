@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
-const NewsPage = props => {
+const NewsPage = ({ props, children }) => {
   return (
     <View style={styles.containerStyle}>
-      <Text>{props.children}</Text>
+      <Text>{props}</Text>
+
+      <Text>{children}</Text>
     </View>
   );
 };
@@ -12,9 +14,7 @@ const NewsPage = props => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F5FCFF"
+    backgroundColor: "green"
   }
 });
 
