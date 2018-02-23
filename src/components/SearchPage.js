@@ -22,15 +22,13 @@ class SearchPage extends Component {
     return (
       <View style={styles.search}>
         <Input
-          value={this.state.inputValue}
-          onChangeText={this.onChangeText}
+          value={this.props.inputValue}
+          onChangeText={this.props.onChangeText}
           placeholder="sports"
           label="Search"
           style={styles.inputStyle}
         />
-        <Button onPress={() => this.props.searchNews(this.state.inputValue)}>
-          Search
-        </Button>
+        <Button onPress={this.props.searchNews}>Search</Button>
       </View>
     );
   }

@@ -9,7 +9,7 @@ import {
   ListItem,
   FlatList,
   Linking,
-  ScrollView
+  ActivityIndicator
 } from "react-native";
 import axios from "axios";
 import autoBind from "react-autobind";
@@ -28,10 +28,10 @@ class HomePage extends Component {
       page: 1,
       seed: 1,
       error: null,
-      refreshing: false,
+      size: false,
       ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     };
-    autoBind(this);
+    this.searchNews = this.searchNews.bind(this);
     this.dataSource = this.state.ds.cloneWithRows(this.state.data);
   }
   openLink(url) {
@@ -44,21 +44,20 @@ class HomePage extends Component {
     });
   }
 
-  searchNews = value => {
-    const { page, seed } = this.state;
+  searchNews = () => {
+    const { page, seed, search } = this.state;
     const url =
       "https://content.guardianapis.com/search?q=" +
-      value +
-      "&api-key=test&show-fields=starRating,headline,thumbnail";
+      search +
+      "&api-key=21ac95f2-7287-4ba5-a5e6-54519d21a76b&show-fields=all&page-Size=10&page=" +
+      page;
     this.setState({ loading: true });
     axios
       .get(url)
       .then(response => {
         this.setState({
-          data:
-            page === 1
-              ? response.data.response.results
-              : [...this.state.data, ...response.data.response.results],
+          page: this.state.page + 1,
+          data: [...this.state.data, ...response.data.response.results],
           error: response.error || null,
           loading: false,
           refreshing: false
@@ -68,6 +67,7 @@ class HomePage extends Component {
         this.setState({ error, loading: false });
       });
   };
+
   renderItem = ({ item }) => (
     <View>
       <Text>{item.webTitle}</Text>
@@ -84,10 +84,21 @@ class HomePage extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <SearchPage searchNews={this.searchNews} />
+        <SearchPage
+          inputValue={this.state.search}
+          onChangeText={value =>
+            this.setState({
+              search: value
+            })
+          }
+          searchNews={this.searchNews}
+        />
         <FlatList
+          onContentSizeChange={() => this.setState({ size: true })}
+          onEndReached={this.state.size ? this.searchNews : null}
+          onEndReachedThreshold={0.2}
           data={this.state.data}
-          renderItem={item => this.renderItem(item)}
+          renderItem={this.renderItem}
           keyExtractor={item => item.id}
         />
       </View>
