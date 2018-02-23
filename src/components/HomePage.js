@@ -6,6 +6,8 @@ import {
   Text,
   View,
   ListView,
+  ListItem,
+  FlatList,
   Linking,
   ScrollView
 } from "react-native";
@@ -21,10 +23,16 @@ class HomePage extends Component {
     super(props);
     this.state = {
       search: "",
-      posts: [],
-      page: 1
+      loading: false,
+      data: [],
+      page: 1,
+      seed: 1,
+      error: null,
+      refreshing: false,
+      ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     };
     autoBind(this);
+    this.dataSource = this.state.ds.cloneWithRows(this.state.data);
   }
   openLink(url) {
     Linking.canOpenURL(url).then(supported => {
@@ -36,76 +44,53 @@ class HomePage extends Component {
     });
   }
 
-  searchNews(value) {
-    this.setState({
-      search: value
-    });
+  searchNews = value => {
+    const { page, seed } = this.state;
+    const url =
+      "https://content.guardianapis.com/search?q=" +
+      value +
+      "&api-key=test&show-fields=starRating,headline,thumbnail";
+    this.setState({ loading: true });
     axios
-      .get(
-        "https://content.guardianapis.com/search?q=" +
-          value +
-          "&api-key=test&show-fields=starRating,headline,thumbnail"
-      )
+      .get(url)
       .then(response => {
         this.setState({
-          posts: response.data.response.results,
-          page: response.data.response.currentPage
+          data:
+            page === 1
+              ? response.data.response.results
+              : [...this.state.data, ...response.data.response.results],
+          error: response.error || null,
+          loading: false,
+          refreshing: false
         });
-        console.log(this.state.page);
       })
-      .catch(function(error) {
-        console.warn(error);
+      .catch(error => {
+        this.setState({ error, loading: false });
       });
-  }
-  handlePageChange(e) {
-    var offset = e.nativeEvent.contentOffset;
-    var pageNb = this.state.page + 1;
-    var value = this.state.search;
-    if (offset) {
-      axios
-        .get(
-          "https://content.guardianapis.com/search?q=" +
-            value +
-            "&api-key=test&show-fields=starRating,headline,thumbnail-currentPage" +
-            pageNb
-        )
-        .then(response => {
-          this.setState(prevState => {
-            let { posts, page } = prevState;
-            response.data.response.results.map((el, i) => {
-              posts.push(el);
-            });
-            return {
-              posts,
-              page: prevState.page + response.data.response.currentPage
-            };
-          });
-        });
-    }
-  }
+  };
+  renderItem = ({ item }) => (
+    <View>
+      <Text>{item.webTitle}</Text>
+      <Image
+        style={{ width: 50, height: 50 }}
+        source={{ uri: item.fields.thumbnail }}
+      />
+      <Text onPress={() => this.openLink(item.webUrl)}>
+        For More Indormation Click here
+      </Text>
+    </View>
+  );
 
   render() {
-    console.log(this.state.posts);
     return (
-      <ScrollView onMomentumScrollEnd={this.handlePageChange}>
-        <View style={styles.container}>
-          <SearchPage searchNews={this.searchNews} />
-          {this.state.posts.map((el, i) => {
-            return (
-              <NewsPage key={i} style={styles.card}>
-                <Text style={styles.title}>{el.fields.headline}</Text>
-                <Image
-                  style={styles.img}
-                  source={{ uri: el.fields.thumbnail }}
-                />
-                <Text onPress={() => this.openLink(el.apiUrl)}>
-                  For more information Click Here
-                </Text>
-              </NewsPage>
-            );
-          })}
-        </View>
-      </ScrollView>
+      <View style={styles.container}>
+        <SearchPage searchNews={this.searchNews} />
+        <FlatList
+          data={this.state.data}
+          renderItem={item => this.renderItem(item)}
+          keyExtractor={item => item.id}
+        />
+      </View>
     );
   }
 }
