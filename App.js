@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import HomePage from "./src/components/HomePage";
 import WebPage from "./src/components/WebPage";
-import { NativeRouter, Route, Link } from "react-router-native";
+import NavScreen from "./src/components/NavScreen";
 
 export default class App extends Component<Props> {
   constructor(props) {
@@ -21,19 +21,9 @@ export default class App extends Component<Props> {
   }
   render() {
     return (
-      <NativeRouter>
-        <View style={styles.container}>
-          <Route
-            exact
-            path="/"
-            render={() => <HomePage getUrl={this.getUrl} />}
-          />
-          <Route
-            path="/webpage"
-            render={() => <WebPage url={this.state.url} />}
-          />
-        </View>
-      </NativeRouter>
+      <View style={styles.container}>
+        <HomePage />
+      </View>
     );
   }
 }

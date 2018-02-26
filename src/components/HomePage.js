@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import autoBind from "react-autobind";
-import { NativeRouter, Route, Link } from "react-router-native";
+import { StackNavigator } from "react-navigation";
 
 import { NewsPage } from "./NewsPage";
 import SearchPage from "./SearchPage";
@@ -21,6 +21,10 @@ import Button from "./Button";
 import WebPage from "./WebPage";
 
 class HomePage extends Component {
+  static navigationOptions = {
+    title: "News App"
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -65,20 +69,19 @@ class HomePage extends Component {
       });
   };
 
-  renderItem = ({ item }) => (
-    <View>
-      <Text style={styles.title}>{item.webTitle}</Text>
-      <Image style={styles.img} source={{ uri: item.fields.thumbnail }} />
-      <Link to="/webpage">
-        <Text
-          onPress={() => this.props.getUrl(item.webUrl)}
-          style={styles.link}
-        >
+  renderItem = ({ item }) => {
+    const navigate = this.props.navigation.navigate;
+    console.log("heyy", navigate);
+    return (
+      <View>
+        <Text style={styles.title}>{item.webTitle}</Text>
+        <Image style={styles.img} source={{ uri: item.fields.thumbnail }} />
+        <Text onPress={() => navigate("WebPage")} style={styles.link}>
           For More Indormation Click here
         </Text>
-      </Link>
-    </View>
-  );
+      </View>
+    );
+  };
 
   renderSeparator = () => {
     return (
@@ -120,6 +123,7 @@ class HomePage extends Component {
       }
     );
   };
+
   render() {
     return (
       <View style={styles.container}>
@@ -140,7 +144,7 @@ class HomePage extends Component {
           renderItem={this.renderItem}
           ItemSeparatorComponent={this.renderSeparator}
           ListFooterComponent={this.renderFooter}
-          keyExtractor={item => item.id}
+          keyExtractor={(item, key) => key}
           refreshing={this.state.refreshing}
           onRefresh={this.handeleRefresh}
         />
@@ -148,7 +152,6 @@ class HomePage extends Component {
     );
   }
 }
-export default HomePage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -169,3 +172,9 @@ const styles = StyleSheet.create({
     fontSize: 20
   }
 });
+
+const NavScreen = StackNavigator({
+  Home: { screen: HomePage },
+  WebPage: { screen: WebPage }
+});
+export default NavScreen;
