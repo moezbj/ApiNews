@@ -13,10 +13,12 @@ import {
 } from "react-native";
 import axios from "axios";
 import autoBind from "react-autobind";
+import { NativeRouter, Route, Link } from "react-router-native";
 
 import { NewsPage } from "./NewsPage";
 import SearchPage from "./SearchPage";
 import Button from "./Button";
+import WebPage from "./WebPage";
 
 class HomePage extends Component {
   constructor(props) {
@@ -26,32 +28,25 @@ class HomePage extends Component {
       loading: false,
       data: [],
       page: 1,
-      seed: 1,
       error: null,
       size: false,
+      isClicked: false,
+      refreshing: false,
+
       ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     };
     this.searchNews = this.searchNews.bind(this);
     this.dataSource = this.state.ds.cloneWithRows(this.state.data);
   }
-  openLink(url) {
-    Linking.canOpenURL(url).then(supported => {
-      if (supported) {
-        Linking.openURL(url);
-      } else {
-        console.log("Don't know how to open URI: " + el.apiUrl);
-      }
-    });
-  }
 
   searchNews = () => {
-    const { page, seed, search } = this.state;
+    this.setState({ loading: true });
+    const { page, search } = this.state;
     const url =
       "https://content.guardianapis.com/search?q=" +
       search +
       "&api-key=21ac95f2-7287-4ba5-a5e6-54519d21a76b&show-fields=all&page-Size=10&page=" +
       page;
-    this.setState({ loading: true });
     axios
       .get(url)
       .then(response => {
@@ -60,27 +55,71 @@ class HomePage extends Component {
           data: [...this.state.data, ...response.data.response.results],
           error: response.error || null,
           loading: false,
-          refreshing: false
+          seed: 1,
+          refreshing: false,
+          loading: false
         });
       })
       .catch(error => {
-        this.setState({ error, loading: false });
+        this.setState({ error });
       });
   };
 
   renderItem = ({ item }) => (
     <View>
-      <Text>{item.webTitle}</Text>
-      <Image
-        style={{ width: 50, height: 50 }}
-        source={{ uri: item.fields.thumbnail }}
-      />
-      <Text onPress={() => this.openLink(item.webUrl)}>
-        For More Indormation Click here
-      </Text>
+      <Text style={styles.title}>{item.webTitle}</Text>
+      <Image style={styles.img} source={{ uri: item.fields.thumbnail }} />
+      <Link to="/webpage">
+        <Text
+          onPress={() => this.props.getUrl(item.webUrl)}
+          style={styles.link}
+        >
+          For More Indormation Click here
+        </Text>
+      </Link>
     </View>
   );
 
+  renderSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "86%",
+          backgroundColor: "#CED0CE",
+          marginLeft: "14%"
+        }}
+      />
+    );
+  };
+
+  renderFooter = () => {
+    if (!this.state.loading) return null;
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+          borderTopWidth: 1,
+          borderColor: "#CED0CE"
+        }}
+      >
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
+
+  handeleRefresh = () => {
+    this.setState(
+      {
+        page: this.state.page,
+        refreshing: true,
+        seed: this.state.seed + 1
+      },
+      () => {
+        this.searchNews();
+      }
+    );
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -99,7 +138,11 @@ class HomePage extends Component {
           onEndReachedThreshold={0.2}
           data={this.state.data}
           renderItem={this.renderItem}
+          ItemSeparatorComponent={this.renderSeparator}
+          ListFooterComponent={this.renderFooter}
           keyExtractor={item => item.id}
+          refreshing={this.state.refreshing}
+          onRefresh={this.handeleRefresh}
         />
       </View>
     );
@@ -114,15 +157,15 @@ const styles = StyleSheet.create({
   title: {
     justifyContent: "center",
     alignItems: "center",
-    color: "red"
+    color: "red",
+    fontSize: 20
   },
   img: {
-    width: 200,
-    height: 200
+    width: 300,
+    height: 300,
+    alignSelf: "center"
   },
-  card: {
-    flexDirection: "column",
-    borderColor: "red",
-    borderWidth: 1
+  link: {
+    fontSize: 20
   }
 });

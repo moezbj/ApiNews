@@ -25,6 +25,7 @@ class SearchPage extends Component {
           value={this.props.inputValue}
           onChangeText={this.props.onChangeText}
           placeholder="sports"
+          autoFocus={true}
           label="Search"
           style={styles.inputStyle}
         />
