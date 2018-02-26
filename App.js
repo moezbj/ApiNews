@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import HomePage from "./src/components/HomePage";
 import WebPage from "./src/components/WebPage";
-import NavScreen from "./src/components/NavScreen";
 
 export default class App extends Component<Props> {
   constructor(props) {

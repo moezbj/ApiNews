@@ -34,9 +34,7 @@ class HomePage extends Component {
       page: 1,
       error: null,
       size: false,
-      isClicked: false,
       refreshing: false,
-
       ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     };
     this.searchNews = this.searchNews.bind(this);
@@ -71,12 +69,14 @@ class HomePage extends Component {
 
   renderItem = ({ item }) => {
     const navigate = this.props.navigation.navigate;
-    console.log("heyy", navigate);
     return (
       <View>
         <Text style={styles.title}>{item.webTitle}</Text>
         <Image style={styles.img} source={{ uri: item.fields.thumbnail }} />
-        <Text onPress={() => navigate("WebPage")} style={styles.link}>
+        <Text
+          onPress={() => navigate("WebPage", { url: item.webUrl })}
+          style={styles.link}
+        >
           For More Indormation Click here
         </Text>
       </View>
