@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from 'react';
 import {
   Image,
   Platform,
@@ -10,34 +10,49 @@ import {
   FlatList,
   Linking,
   ActivityIndicator
-} from "react-native";
-import axios from "axios";
-import autoBind from "react-autobind";
-import { StackNavigator } from "react-navigation";
+} from 'react-native';
+import axios from 'axios';
+import autoBind from 'react-autobind';
+import {StackNavigator} from 'react-navigation';
 
-import { NewsPage } from "./NewsPage";
-import SearchPage from "./SearchPage";
-import Button from "./Button";
-import WebPage from "./WebPage";
-import Spinner from "./Spinner";
-import Icon from "react-native-vector-icons/FontAwesome";
+import {NewsPage} from './NewsPage';
+import SearchPage from './SearchPage';
+import Button from './Button';
+import WebPage from './WebPage';
+import Spinner from './Spinner';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class HomePage extends Component {
   static navigationOptions = {
-    header: null
+    title: 'News App',
+    headerStyle: {backgroundColor: '#253748'},
+    headerLeft: (
+      <Image
+        style={{width: 50, height: 50, flex: 1}}
+        source={{
+          uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'
+        }}
+      />
+    ),
+    headerTintColor: 'red',
+    headerTitleStyle: {
+      fontSize: 16,
+      alignSelf: 'center',
+      flex: 2
+    }
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      search: "",
+      search: '',
       loading: false,
       data: [],
       page: 1,
       error: null,
       size: false,
       refreshing: false,
-      ds: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+      ds: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
     };
     this.searchNews = this.searchNews.bind(this);
     this.dataSource = this.state.ds.cloneWithRows(this.state.data);
@@ -47,12 +62,12 @@ class HomePage extends Component {
     this.searchNews();
   }
   searchNews = () => {
-    this.setState({ loading: true });
-    const { page, search } = this.state;
+    this.setState({loading: true});
+    const {page, search} = this.state;
     const url =
-      "https://content.guardianapis.com/search?q=" +
-      this.props.search +
-      "&api-key=21ac95f2-7287-4ba5-a5e6-54519d21a76b&show-fields=all&page-Size=10&page=" +
+      'https://content.guardianapis.com/search?q=' +
+      search +
+      '&api-key=21ac95f2-7287-4ba5-a5e6-54519d21a76b&show-fields=all&page-Size=10&page=' +
       page;
     axios
       .get(url)
@@ -68,21 +83,18 @@ class HomePage extends Component {
         });
       })
       .catch(error => {
-        this.setState({ error });
+        this.setState({error});
       });
   };
 
-  renderItem = ({ item }) => {
+  renderItem = ({item}) => {
     const navigate = this.props.navigation.navigate;
 
     return (
       <View style={styles.main}>
         <Text style={styles.title}>{item.webTitle}</Text>
-        <Image style={styles.img} source={{ uri: item.fields.thumbnail }} />
-        <Text
-          onPress={() => navigate("WebPage", { url: item.webUrl })}
-          style={styles.link}
-        >
+        <Image style={styles.img} source={{uri: item.fields.thumbnail}} />
+        <Text onPress={() => navigate('WebPage', {url: item.webUrl})} style={styles.link}>
           For More Indormation Click here
         </Text>
       </View>
@@ -100,8 +112,8 @@ class HomePage extends Component {
       <View
         style={{
           height: 1,
-          width: "86%",
-          backgroundColor: "#CED0CE",
+          width: '86%',
+          backgroundColor: '#CED0CE',
           margin: 10
         }}
       />
@@ -126,21 +138,23 @@ class HomePage extends Component {
     );
   };
 
+  onChangeText = newValue => {
+    this.setState({
+      search: newValue
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <SearchPage
           inputValue={this.state.search}
-          onChangeText={value =>
-            this.setState({
-              search: value
-            })
-          }
+          onChangeText={this.onChangeText}
           newData={this.newData}
           searchNews={this.searchNews}
         />
         <FlatList
-          onContentSizeChange={() => this.setState({ size: true })}
+          onContentSizeChange={() => this.setState({size: true})}
           onEndReached={this.state.size ? this.searchNews : null}
           onEndReachedThreshold={0.2}
           data={this.state.data}
@@ -158,31 +172,32 @@ class HomePage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5FCFF"
+    backgroundColor: '#F5FCFF'
   },
   title: {
-    alignSelf: "center",
+    alignSelf: 'center',
+
     fontSize: 18
   },
   img: {
     width: 300,
     height: 300,
-    alignSelf: "center"
+    alignSelf: 'center'
   },
   link: {
     fontSize: 15,
-    alignSelf: "center"
+    alignSelf: 'center'
   },
   main: {
     padding: 5,
     margin: 3,
-    borderColor: "green",
+    borderColor: 'green',
     borderWidth: 1
   }
 });
 
 const NavScreen = StackNavigator({
-  Home: { screen: HomePage },
-  WebPage: { screen: WebPage }
+  Home: {screen: HomePage},
+  WebPage: {screen: WebPage}
 });
 export default NavScreen;
