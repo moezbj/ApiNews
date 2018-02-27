@@ -3,15 +3,15 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 const Spinner = ({ loading }) => (
   <View style={styles.loading}>
-    <ActivityIndicator animating={true} style={[styles.loading]} size="large" />
+    <ActivityIndicator animating size="large" />
   </View>
 );
 
 const styles = StyleSheet.create({
   loading: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 10
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderColor: "#CED0CE"
   }
 });
+export default Spinner;

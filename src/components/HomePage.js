@@ -19,10 +19,12 @@ import { NewsPage } from "./NewsPage";
 import SearchPage from "./SearchPage";
 import Button from "./Button";
 import WebPage from "./WebPage";
+import Spinner from "./Spinner";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 class HomePage extends Component {
   static navigationOptions = {
-    title: "News App"
+    header: null
   };
 
   constructor(props) {
@@ -41,12 +43,15 @@ class HomePage extends Component {
     this.dataSource = this.state.ds.cloneWithRows(this.state.data);
   }
 
+  componentWillMount() {
+    this.searchNews();
+  }
   searchNews = () => {
     this.setState({ loading: true });
     const { page, search } = this.state;
     const url =
       "https://content.guardianapis.com/search?q=" +
-      search +
+      this.props.search +
       "&api-key=21ac95f2-7287-4ba5-a5e6-54519d21a76b&show-fields=all&page-Size=10&page=" +
       page;
     axios
@@ -69,6 +74,7 @@ class HomePage extends Component {
 
   renderItem = ({ item }) => {
     const navigate = this.props.navigation.navigate;
+
     return (
       <View>
         <Text style={styles.title}>{item.webTitle}</Text>
@@ -81,6 +87,12 @@ class HomePage extends Component {
         </Text>
       </View>
     );
+  };
+
+  newData = () => {
+    this.setState({
+      data: []
+    });
   };
 
   renderSeparator = () => {
@@ -98,17 +110,7 @@ class HomePage extends Component {
 
   renderFooter = () => {
     if (!this.state.loading) return null;
-    return (
-      <View
-        style={{
-          paddingVertical: 20,
-          borderTopWidth: 1,
-          borderColor: "#CED0CE"
-        }}
-      >
-        <ActivityIndicator animating size="large" />
-      </View>
-    );
+    return <Spinner />;
   };
 
   handeleRefresh = () => {
@@ -134,6 +136,7 @@ class HomePage extends Component {
               search: value
             })
           }
+          newData={this.newData}
           searchNews={this.searchNews}
         />
         <FlatList
@@ -144,7 +147,7 @@ class HomePage extends Component {
           renderItem={this.renderItem}
           ItemSeparatorComponent={this.renderSeparator}
           ListFooterComponent={this.renderFooter}
-          keyExtractor={(item, key) => key}
+          keyExtractor={(item, key) => key.toString()}
           refreshing={this.state.refreshing}
           onRefresh={this.handeleRefresh}
         />
