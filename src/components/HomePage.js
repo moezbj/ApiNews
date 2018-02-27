@@ -34,7 +34,7 @@ class HomePage extends Component {
         }}
       />
     ),
-    headerTintColor: 'red',
+    headerTintColor: 'white',
     headerTitleStyle: {
       fontSize: 16,
       alignSelf: 'center',
@@ -64,11 +64,7 @@ class HomePage extends Component {
   searchNews = () => {
     this.setState({loading: true});
     const {page, search} = this.state;
-    const url =
-      'https://content.guardianapis.com/search?q=' +
-      search +
-      '&api-key=21ac95f2-7287-4ba5-a5e6-54519d21a76b&show-fields=all&page-Size=10&page=' +
-      page;
+    const url = `https://content.guardianapis.com/search?q=${search}&api-key=21ac95f2-7287-4ba5-a5e6-54519d21a76b&show-fields=all&page-Size=10&page=${page}`;
     axios
       .get(url)
       .then(response => {
@@ -107,21 +103,21 @@ class HomePage extends Component {
     });
   };
 
-  renderSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: '86%',
-          backgroundColor: '#CED0CE',
-          margin: 10
-        }}
-      />
-    );
-  };
+  renderSeparator = () => (
+    <View
+      style={{
+        height: 1,
+        width: '86%',
+        backgroundColor: '#CED0CE',
+        margin: 10
+      }}
+    />
+  );
 
   renderFooter = () => {
-    if (!this.state.loading) return null;
+    if (!this.state.loading) {
+      return null;
+    }
     return <Spinner />;
   };
 
