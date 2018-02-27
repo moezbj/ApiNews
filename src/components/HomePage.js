@@ -76,7 +76,7 @@ class HomePage extends Component {
     const navigate = this.props.navigation.navigate;
 
     return (
-      <View>
+      <View style={styles.main}>
         <Text style={styles.title}>{item.webTitle}</Text>
         <Image style={styles.img} source={{ uri: item.fields.thumbnail }} />
         <Text
@@ -102,7 +102,7 @@ class HomePage extends Component {
           height: 1,
           width: "86%",
           backgroundColor: "#CED0CE",
-          marginLeft: "14%"
+          margin: 10
         }}
       />
     );
@@ -161,10 +161,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5FCFF"
   },
   title: {
-    justifyContent: "center",
-    alignItems: "center",
-    color: "red",
-    fontSize: 20
+    alignSelf: "center",
+    fontSize: 18
   },
   img: {
     width: 300,
@@ -172,7 +170,14 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   link: {
-    fontSize: 20
+    fontSize: 15,
+    alignSelf: "center"
+  },
+  main: {
+    padding: 5,
+    margin: 3,
+    borderColor: "green",
+    borderWidth: 1
   }
 });
 

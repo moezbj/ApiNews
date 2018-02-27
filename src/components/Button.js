@@ -21,13 +21,13 @@ const styles = {
     paddingBottom: 10
   },
   buttonStyle: {
-    alignSelf: "center",
     backgroundColor: "#fff",
     borderRadius: 5,
     borderWidth: 1,
     borderColor: "#007aff",
     marginLeft: 5,
-    marginRight: 5
+    marginRight: 5,
+    alignSelf: "center"
   }
 };
 

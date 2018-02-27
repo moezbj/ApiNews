@@ -24,10 +24,9 @@ class SearchPage extends Component {
         <Input
           value={this.props.inputValue}
           onChangeText={this.props.onChangeText}
-          placeholder="sports"
-          autoFocus={true}
+          placeholder="search"
           label="Search"
-          style={styles.inputStyle}
+          labelStyle={{ color: "#fff" }}
         />
         <Button onPress={this.props.searchNews}>Search</Button>
       </View>
@@ -37,7 +36,7 @@ class SearchPage extends Component {
 
 const styles = StyleSheet.create({
   search: {
-    backgroundColor: "#F5FCFF"
+    backgroundColor: "#616161"
   }
 });
 
