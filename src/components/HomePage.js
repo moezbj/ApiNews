@@ -51,7 +51,11 @@ class HomePage extends Component {
   searchNews = () => {
     this.setState({loading: true});
     const {page, search} = this.state;
-    const url = `https://content.guardianapis.com/search?q=${search}&api-key=21ac95f2-7287-4ba5-a5e6-54519d21a76b&show-fields=all&page-Size=10&page=${page}`;
+    const url =
+      'https://content.guardianapis.com/search?q=' +
+      search +
+      '&api-key=21ac95f2-7287-4ba5-a5e6-54519d21a76b&show-fields=all&page-Size=10&page=' +
+      page;
     axios
       .get(url)
       .then(response => {
@@ -73,9 +77,11 @@ class HomePage extends Component {
     const navigate = this.props.navigation.navigate;
     return (
       <NewsPage>
-        <Text>{item.webTitle}</Text>
-        <Image source={{uri: item.fields.thumbnail}} />
-        <Text onPress={() => navigate('WebPage', {url: item.webUrl})}>For More Indormation Click here</Text>
+        <Text style={styles.title}>{item.webTitle}</Text>
+        <Image source={{uri: item.fields.thumbnail}} style={styles.img} />
+        <Text onPress={() => navigate('WebPage', {url: item.webUrl})} style={styles.title}>
+          For More Indormation Click here
+        </Text>
       </NewsPage>
     );
   };
@@ -141,6 +147,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF'
+  },
+  title: {
+    fontSize: 18
+  },
+  img: {
+    width: 300,
+    height: 300,
+    alignSelf: 'center',
+    borderColor: 'green',
+    borderWidth: 1
   }
 });
 

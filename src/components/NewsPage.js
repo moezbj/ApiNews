@@ -1,14 +1,14 @@
 import React from 'react';
-import {Image, Text, View} from 'react-native';
+import {Image, View} from 'react-native';
 import PropTypes from 'prop-types';
 
-const NewsPage = ({props, children, uri}) => {
+const NewsPage = ({props, children, url}) => {
   const {main, title, img, link} = styles;
   return (
     <View style={main}>
-      <Text style={title}>{props}</Text>
-      <Image style={img} source={{uri: uri}} />
-      <Text style={link}>{children}</Text>
+      <View style={title}>{props}</View>
+      <Image style={img} source={{uri: url}} />
+      <View style={link}>{children}</View>
     </View>
   );
 };
@@ -22,24 +22,24 @@ const styles = {
     borderWidth: 1
   },
   title: {
-    alignSelf: 'center',
-    fontSize: 18
+    alignSelf: 'center'
   },
   img: {
     width: 300,
     height: 300,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    borderColor: 'green',
+    borderWidth: 1
   },
   link: {
-    fontSize: 15,
     alignSelf: 'center'
   }
 };
 
 NewsPage.propTypes = {
   props: PropTypes.string,
-  children: PropTypes.array,
-  uri: PropTypes.string
+  url: PropTypes.string,
+  children: PropTypes.array
 };
 
 export {NewsPage};
