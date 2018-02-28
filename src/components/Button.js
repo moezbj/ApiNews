@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, TouchableOpacity} from 'react-native';
+import PropTypes from 'prop-types';
 
 const Button = ({onPress, children}) => {
   const {buttonStyle, textStyle} = styles;
@@ -21,14 +22,18 @@ const styles = {
     paddingBottom: 10
   },
   buttonStyle: {
+    alignSelf: 'center',
     backgroundColor: '#fff',
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#007aff',
     marginLeft: 5,
-    marginRight: 5,
-    alignSelf: 'center'
+    marginRight: 5
   }
+};
+Button.propTypes = {
+  onPress: PropTypes.func,
+  children: PropTypes.string
 };
 
 export {Button};

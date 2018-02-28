@@ -1,14 +1,14 @@
 import React from 'react';
 import {TextInput, View, Text} from 'react-native';
+import PropTypes from 'prop-types';
 
-const Input = ({label, value, onChangeText, placeholder, placeholderTextColor, secureTextEntry}) => {
+const Input = ({label, value, onChangeText, placeholder, placeholderTextColor}) => {
   const {inputStyle, labelStyle, containerStyle} = styles;
 
   return (
     <View style={containerStyle}>
       <Text style={labelStyle}>{label}</Text>
       <TextInput
-        secureTextEntry={secureTextEntry}
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
         underlineColorAndroid="transparent"
@@ -43,6 +43,14 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center'
   }
+};
+
+Input.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.string,
+  onChangeText: PropTypes.func,
+  placeholder: PropTypes.string,
+  placeholderTextColor: PropTypes.string
 };
 
 export {Input};

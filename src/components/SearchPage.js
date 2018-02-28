@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, ToastAndroid} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import autoBind from 'react-autobind';
+import PropTypes from 'prop-types';
 
 import {Input} from './Input';
 import {Button} from './Button';
@@ -36,5 +37,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#616161'
   }
 });
+
+SearchPage.propTypes = {
+  inputValue: PropTypes.string,
+  onChangeText: PropTypes.func,
+  searchNews: PropTypes.func
+};
 
 export default SearchPage;

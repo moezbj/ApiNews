@@ -1,26 +1,13 @@
 import React, {Component} from 'react';
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  ListView,
-  ListItem,
-  FlatList,
-  Linking,
-  ActivityIndicator
-} from 'react-native';
+import {Image, StyleSheet, Text, View, ListView, FlatList} from 'react-native';
 import axios from 'axios';
-import autoBind from 'react-autobind';
 import {StackNavigator} from 'react-navigation';
+import PropTypes from 'prop-types';
 
 import {NewsPage} from './NewsPage';
 import SearchPage from './SearchPage';
-import Button from './Button';
 import WebPage from './WebPage';
 import Spinner from './Spinner';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 class HomePage extends Component {
   static navigationOptions = {
@@ -74,8 +61,7 @@ class HomePage extends Component {
           error: response.error || null,
           loading: false,
           seed: 1,
-          refreshing: false,
-          loading: false
+          refreshing: false
         });
       })
       .catch(error => {
@@ -85,22 +71,13 @@ class HomePage extends Component {
 
   renderItem = ({item}) => {
     const navigate = this.props.navigation.navigate;
-
     return (
-      <View style={styles.main}>
-        <Text style={styles.title}>{item.webTitle}</Text>
-        <Image style={styles.img} source={{uri: item.fields.thumbnail}} />
-        <Text onPress={() => navigate('WebPage', {url: item.webUrl})} style={styles.link}>
-          For More Indormation Click here
-        </Text>
-      </View>
+      <NewsPage>
+        <Text>{item.webTitle}</Text>
+        <Image source={{uri: item.fields.thumbnail}} />
+        <Text onPress={() => navigate('WebPage', {url: item.webUrl})}>For More Indormation Click here</Text>
+      </NewsPage>
     );
-  };
-
-  newData = () => {
-    this.setState({
-      data: []
-    });
   };
 
   renderSeparator = () => (
@@ -143,12 +120,7 @@ class HomePage extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <SearchPage
-          inputValue={this.state.search}
-          onChangeText={this.onChangeText}
-          newData={this.newData}
-          searchNews={this.searchNews}
-        />
+        <SearchPage inputValue={this.state.search} onChangeText={this.onChangeText} searchNews={this.searchNews} />
         <FlatList
           onContentSizeChange={() => this.setState({size: true})}
           onEndReached={this.state.size ? this.searchNews : null}
@@ -169,31 +141,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF'
-  },
-  title: {
-    alignSelf: 'center',
-
-    fontSize: 18
-  },
-  img: {
-    width: 300,
-    height: 300,
-    alignSelf: 'center'
-  },
-  link: {
-    fontSize: 15,
-    alignSelf: 'center'
-  },
-  main: {
-    padding: 5,
-    margin: 3,
-    borderColor: 'green',
-    borderWidth: 1
   }
 });
 
+HomePage.propTypes = {
+  navigation: PropTypes.object,
+  navigate: PropTypes.func
+};
 const NavScreen = StackNavigator({
   Home: {screen: HomePage},
   WebPage: {screen: WebPage}
 });
+
 export default NavScreen;

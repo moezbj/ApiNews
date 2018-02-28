@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {WebView} from 'react-native';
-import {StackNavigator} from 'react-navigation';
+import PropTypes from 'prop-types';
 
 export default class WebPage extends Component {
   static navigationOptions = {
@@ -25,3 +25,6 @@ export default class WebPage extends Component {
     );
   }
 }
+WebPage.propTypes = {
+  navigation: PropTypes.func
+};
