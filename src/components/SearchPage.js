@@ -9,7 +9,7 @@ import {Button} from './Button';
 class SearchPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {id: 1};
     autoBind(this);
   }
 
@@ -20,13 +20,13 @@ class SearchPage extends Component {
           value={this.props.inputValue}
           onChangeText={this.props.onChangeText}
           inlineImageLeft="search_icon"
-          placeholderTextColor="#fff"
-          placeholder="search"
+          placeholderTextColor="#BDBDBD"
+          placeholder="type here"
           label="Search"
           onEndEditing={this.onEndEditing}
           labelStyle={{color: '#fff'}}
         />
-        <Button onPress={this.props.searchNews}>Search</Button>
+        <Button onPress={() => this.props.searchNews(this.state.id)}>Search</Button>
       </View>
     );
   }
@@ -34,14 +34,16 @@ class SearchPage extends Component {
 
 const styles = StyleSheet.create({
   search: {
-    backgroundColor: '#616161'
+    backgroundColor: '#616161',
+    paddingTop: 10
   }
 });
 
 SearchPage.propTypes = {
   inputValue: PropTypes.string,
   onChangeText: PropTypes.func,
-  searchNews: PropTypes.func
+  searchNews: PropTypes.func,
+  id: PropTypes.number
 };
 
 export default SearchPage;

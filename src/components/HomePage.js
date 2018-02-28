@@ -48,8 +48,13 @@ class HomePage extends Component {
   componentWillMount() {
     this.searchNews();
   }
-  searchNews = () => {
-    this.setState({loading: true});
+  searchNews = id => {
+    if (id === 1) {
+      this.newData();
+    }
+    this.setState({
+      loading: true
+    });
     const {page, search} = this.state;
     const url =
       'https://content.guardianapis.com/search?q=' +
@@ -79,7 +84,7 @@ class HomePage extends Component {
       <NewsPage>
         <Text style={styles.title}>{item.webTitle}</Text>
         <Image source={{uri: item.fields.thumbnail}} style={styles.img} />
-        <Text onPress={() => navigate('WebPage', {url: item.webUrl})} style={styles.title}>
+        <Text onPress={() => navigate('WebPage', {url: item.webUrl})} style={styles.link}>
           For More Indormation Click here
         </Text>
       </NewsPage>
@@ -123,10 +128,21 @@ class HomePage extends Component {
     });
   };
 
+  newData = () => {
+    this.setState({
+      data: []
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
-        <SearchPage inputValue={this.state.search} onChangeText={this.onChangeText} searchNews={this.searchNews} />
+        <SearchPage
+          inputValue={this.state.search}
+          onChangeText={this.onChangeText}
+          newData={this.newData}
+          searchNews={this.searchNews}
+        />
         <FlatList
           onContentSizeChange={() => this.setState({size: true})}
           onEndReached={this.state.size ? this.searchNews : null}
@@ -150,6 +166,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18
+  },
+  link: {
+    fontSize: 15,
+    alignSelf: 'center'
   },
   img: {
     width: 300,
