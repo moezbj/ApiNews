@@ -59,7 +59,7 @@ class HomePage extends Component {
     const url =
       'https://content.guardianapis.com/search?q=' +
       search +
-      '&api-key=21ac95f2-7287-4ba5-a5e6-54519d21a76b&show-fields=all&page-Size=10&page=' +
+      '&api-key=21ac95f2-7287-4ba5-a5e6-54519d21a76b&show-fields=all&page-Size=5&page=' +
       page;
     axios
       .get(url)
@@ -85,7 +85,7 @@ class HomePage extends Component {
         <Text style={styles.title}>{item.webTitle}</Text>
         <Image source={{uri: item.fields.thumbnail}} style={styles.img} />
         <Text onPress={() => navigate('WebPage', {url: item.webUrl})} style={styles.link}>
-          For More Indormation Click here
+          Get the article
         </Text>
       </NewsPage>
     );
@@ -133,6 +133,9 @@ class HomePage extends Component {
       data: []
     });
   };
+  onContentSizeChange = () => {
+    this.setState({size: true});
+  };
 
   render() {
     return (
@@ -144,7 +147,7 @@ class HomePage extends Component {
           searchNews={this.searchNews}
         />
         <FlatList
-          onContentSizeChange={() => this.setState({size: true})}
+          onContentSizeChange={this.onContentSizeChange}
           onEndReached={this.state.size ? this.searchNews : null}
           onEndReachedThreshold={0.2}
           data={this.state.data}
@@ -169,7 +172,8 @@ const styles = StyleSheet.create({
   },
   link: {
     fontSize: 15,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginTop: 10
   },
   img: {
     width: 300,

@@ -26,5 +26,5 @@ export default class WebPage extends Component {
   }
 }
 WebPage.propTypes = {
-  navigation: PropTypes.func
+  navigation: PropTypes.object
 };
